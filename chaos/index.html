@@ -1319,19 +1319,27 @@
     })();
 
 
-    (function () {
-      const logo = document.querySelector('.logo-header');
-      if (!logo) return;
-
-      logo.addEventListener('click', (e) => {
-        e.preventDefault();
-        const href = logo.getAttribute('href');
-        document.body.classList.add('page-exit');
-        setTimeout(() => {
-          window.location.href = href;
-        }, 420);
-      });
-    })();
+  function () {
+    const logoLink = document.querySelector('.logo-header a');
+    if (!logoLink) return;
+  
+    logoLink.addEventListener('click', (e) => {
+      e.preventDefault();
+      const href = logoLink.getAttribute('href');
+      document.body.classList.add('page-exit');
+      setTimeout(() => {
+        window.location.href = href;
+      }, 420);
+    });
+  })();
   </script>
-</body>
-</html>
+  
+  <script>
+    // Фикс для кнопки "Назад"
+    window.addEventListener('pageshow', () => {
+      document.body.classList.remove('page-exit');
+      document.body.style.opacity = '1';
+    });
+  </script>
+  </body>
+  </html>

@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New York • Events</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Montserrat', sans-serif;
+            overflow: hidden;
+            background: #000;
+            opacity: 1;
+        }
+
+        .container {
+            opacity: 0;
+            transform: translateY(10px);
+            animation: containerEnter 0.7s ease-out forwards;
+        }
+
+        @keyframes containerEnter {
+            from { opacity: 0; transform: translateY(10px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pageExit {
+            from { opacity: 1; }
+            to   { opacity: 0; }
+        }
+
+        .page-exit {
+            animation: pageExit 0.45s ease-in forwards;
+        }
+
+        .bg {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            top: 0;
+            left: 0;
+            background: url('img/background.webp') center center / cover no-repeat;
+            filter: blur(10px) brightness(0.5);
+            z-index: -2;
+        }
+
+        .overlay {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            top: 0;
+            left: 0;
+            background: radial-gradient(circle at center, rgba(0,0,0,0.25), rgba(0,0,0,0.85));
+            z-index: -1;
+        }
+
+        .logo-header {
+            position: fixed;
+            top: 24px;
+            left: 40px;
+            z-index: 10;
+        }
+
+        .logo-img {
+            height: 40px;
+            width: auto;
+            filter: drop-shadow(0 0 6px rgba(255,255,255,0.55));
+            animation: logoGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes logoGlow {
+            0%   { filter: drop-shadow(0 0 4px rgba(255,255,255,0.35)); }
+            50%  { filter: drop-shadow(0 0 10px rgba(255,255,255,0.9)); }
+            100% { filter: drop-shadow(0 0 4px rgba(255,255,255,0.35)); }
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100vh;
+            padding-top: 80px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .brakelight {
+            position: fixed;
+            bottom: 10%;
+            left: 28%;
+            width: 120px;
+            height: 70px;
+            background: radial-gradient(circle at center,
+                rgba(255, 40, 40, 0.35),
+                rgba(255, 0, 0, 0.18),
+                transparent 75%);
+            filter: blur(16px);
+            opacity: 0;
+            mix-blend-mode: screen;
+            z-index: 0;
+            animation: brakeBlink 3s ease-in-out infinite;
+        }
+
+        .brakelight-right {
+            left: 40%;
+            bottom: 10%;
+        }
+
+        @keyframes brakeBlink {
+            0%   { opacity: 0; }
+            25%  { opacity: 0.35; }
+            50%  { opacity: 0.15; }
+            75%  { opacity: 0.3; }
+            100% { opacity: 0; }
+        }
+
+        .hazardlight {
+            position: fixed;
+            width: 89px;
+            height: 30px;
+            background: radial-gradient(circle,
+                rgba(255,140,0,0.55),
+                rgba(255,110,0,0.25),
+                transparent 70%);
+            filter: blur(14px);
+            opacity: 0;
+            mix-blend-mode: screen;
+            z-index: 0;
+            animation: hazardBlink 1.4s ease-in-out infinite;
+        }
+
+        .hazard-left {
+            bottom: 9%;
+            left: 28%;
+        }
+
+        .hazard-right {
+            bottom: 10%;
+            left: 42%;
+        }
+
+        @keyframes hazardBlink {
+            0%   { opacity: 0; }
+            20%  { opacity: 0.55; }
+            40%  { opacity: 0.25; }
+            60%  { opacity: 0.45; }
+            80%  { opacity: 0.1; }
+            100% { opacity: 0; }
+        }
+
+        .spark-layer {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 2;
+        }
+
+        .spark {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.85);
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.9);
+            filter: blur(0.4px);
+            animation: sparkFly 3.5s linear infinite;
+            opacity: 0.75;
+        }
+
+        @keyframes sparkFly {
+            0%   { transform: translate(0,0) scale(1); opacity: 0; }
+            15%  { opacity: 1; }
+            100% { transform: translate(var(--sx), var(--sy)) scale(0.3); opacity: 0; }
+        }
+
+        .title {
+            font-size: 38px;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 2px;
+            text-shadow: 0 0 18px rgba(255,255,255,0.85);
+            margin-bottom: 50px;
+            animation: glow 2.2s ease-in-out infinite;
+            position: absolute;
+            top: 23px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 6;
+        }
+
+        @keyframes glow {
+            0%   { text-shadow: 0 0 10px rgba(255,255,255,0.4); }
+            50%  { text-shadow: 0 0 25px rgba(255,255,255,1); }
+            100% { text-shadow: 0 0 10px rgba(255,255,255,0.4); }
+        }
+
+        .panels {
+            display: flex;
+            gap: 35px;
+            margin-top: 60px;
+        }
+
+        .panel {
+            width: 260px;
+            height: 520px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 22px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            border: 1px solid rgba(255,255,255,0.12);
+            backdrop-filter: blur(7px);
+            opacity: 0;
+            transform: translateY(40px);
+            transition:
+                opacity 0.8s ease,
+                transform 0.8s ease,
+                box-shadow 0.35s ease,
+                border-color 0.35s ease;
+        }
+
+        .panel.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .panel img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.85;
+            transition: .4s ease;
+            filter: grayscale(100%);
+        }
+
+        .panel-title {
+            position: absolute;
+            bottom: 22px;
+            width: 100%;
+            text-align: center;
+            color: #fff;
+            font-size: 20px;
+            font-weight: 700;
+            text-shadow: 0 0 8px rgba(0,0,0,1);
+        }
+
+        .panel:hover {
+            transform: translateY(-10px);
+        }
+
+        .panel:hover img {
+            opacity: 1;
+            transform: scale(1.06);
+            filter: grayscale(0%);
+        }
+
+        /* DEADLY ROUTE CARD */
+        .panel-deadly {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .panel-deadly::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0;
+            mix-blend-mode: screen;
+            z-index: 2;
+            background:
+                radial-gradient(circle at bottom,
+                    rgba(255, 40, 40, 0.4) 0%,
+                    rgba(255, 0, 0, 0.12) 40%,
+                    transparent 75%);
+            transition: opacity .35s ease;
+        }
+
+        .panel-deadly::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 3;
+            background: repeating-linear-gradient(
+                180deg,
+                rgba(255, 255, 255, 0.05) 0px,
+                rgba(255, 255, 255, 0.0) 2px,
+                transparent 4px
+            );
+            transition: opacity .25s ease;
+        }
+
+        .panel-deadly:hover::before {
+            opacity: 0.9;
+            animation: deadlyHeat 2s ease-in-out infinite;
+        }
+
+        .panel-deadly:hover::after {
+            opacity: 0.25;
+            animation: deadlyScan 0.18s linear infinite;
+        }
+
+        @keyframes deadlyHeat {
+            0%   { transform: scale(1);   opacity: 0.25; }
+            40%  { transform: scale(1.04);opacity: 0.7;  }
+            100% { transform: scale(1.02);opacity: 0.4;  }
+        }
+
+        @keyframes deadlyScan {
+            0%   { transform: translateY(0); }
+            100% { transform: translateY(-10px); }
+        }
+
+        .panel-deadly .panel-title {
+            bottom: 18px;
+            font-size: 19px;
+            letter-spacing: 1px;
+        }
+
+        .panel-soon:hover {
+            box-shadow:
+                0 12px 25px rgba(0,0,0,0.45),
+                0 0 22px rgba(255,255,255,0.5);
+            border-color: rgba(255,255,255,0.6);
+        }
+
+        .panel-zavod:hover {
+            box-shadow:
+                0 12px 25px rgba(0,0,0,0.6),
+                0 0 26px rgba(255, 160, 40, 0.5),
+                0 0 40px rgba(255, 120, 20, 0.5);
+            border-color: rgba(255, 180, 70, 0.5);
+        }
+
+        .panel-chaos:hover {
+            box-shadow:
+                0 12px 25px rgba(0,0,0,0.6),
+                0 0 26px rgba(255, 0, 0, 0.5),
+                0 0 40px rgba(180, 0, 0, 0.5);
+            border-color: rgba(255, 40, 40, 0.5);
+        }
+
+        .panel-zavod {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .panel-zavod::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0;
+            mix-blend-mode: screen;
+            z-index: 2;
+            background:
+                radial-gradient(circle at bottom,
+                    rgba(255, 170, 60, 0.4) 0%,
+                    rgba(255, 130, 20, 0.15) 40%,
+                    transparent 70%);
+            transition: opacity .35s ease;
+        }
+
+        .panel-zavod::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 3;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(255, 200, 80, 0.1) 0px,
+                rgba(255, 200, 80, 0.07) 2px,
+                transparent 4px
+            );
+            transition: opacity .35s ease;
+        }
+
+        .panel-zavod:hover::before {
+            opacity: 0.7;
+            animation: zavodHeat 2.5s ease-in-out infinite;
+        }
+
+        .panel-zavod:hover::after {
+            opacity: 0.3;
+            animation: zavodWave 0.22s infinite linear;
+        }
+
+        @keyframes zavodHeat {
+            0%   { transform: scale(1); opacity: 0.25; }
+            40%  { transform: scale(1.03); opacity: 0.7; }
+            100% { transform: scale(1.02); opacity: 0.35; }
+        }
+
+        @keyframes zavodWave {
+            0%   { transform: translateY(0); }
+            100% { transform: translateY(-8px); }
+        }
+
+        .panel-chaos {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .panel-chaos::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0;
+            mix-blend-mode: screen;
+            z-index: 2;
+            background:
+                radial-gradient(circle at bottom,
+                    rgba(255, 0, 0, 0.35) 0%,
+                    rgba(255, 0, 0, 0.05) 45%,
+                    transparent 70%),
+                repeating-linear-gradient(
+                    180deg,
+                    rgba(255, 0, 0, 0.25) 0px,
+                    rgba(255, 0, 0, 0.0) 2px,
+                    rgba(0, 0, 0, 0) 4px
+                );
+            transition: opacity 0.35s ease;
+        }
+
+        .panel-chaos::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0;
+            mix-blend-mode: screen;
+            z-index: 3;
+            background:
+                radial-gradient(circle at center,
+                    rgba(255, 255, 255, 0.12) 0%,
+                    transparent 55%);
+            transition: opacity 0.25s ease;
+        }
+
+        .panel-chaos:not(:hover)::before,
+        .panel-chaos:not(:hover)::after {
+            animation: none;
+        }
+
+        .panel-chaos:hover::before {
+            opacity: 1;
+            animation: chaosPulse 1.6s ease-in-out infinite;
+        }
+
+        .panel-chaos:hover::after {
+            opacity: 0.4;
+            animation: chaosGlitch 0.18s steps(2, end) infinite alternate;
+        }
+
+        @keyframes chaosPulse {
+            0%   { transform: scale(1);   opacity: 0.15; }
+            40%  { transform: scale(1.04);opacity: 0.5;  }
+            100% { transform: scale(1.02);opacity: 0.25; }
+        }
+
+        @keyframes chaosGlitch {
+            0%   { transform: translate(0, 0); }
+            50%  { transform: translate(-1px, 1px); }
+            100% { transform: translate(1px, -1px); }
+        }
+
+        .panel-soon {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            position: relative;
+            background: rgba(255,255,255,0.03);
+            border: 1px dashed rgba(255,255,255,0.18);
+        }
+
+        .panel-soon .panel-title {
+            bottom: auto;
+            font-size: 22px;
+            opacity: 0.65;
+            letter-spacing: 1px;
+        }
+
+        .panel-soon:hover .panel-title {
+            opacity: 1;
+        }
+
+        .panel-zavod .panel-title {
+            bottom: 8px;
+        }
+
+        .panel-chaos .panel-title {
+            bottom: 33px;
+        }
+
+        .footer-anti {
+            margin-left: 10px;
+            color: rgba(255, 0, 0, 0.9);
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow:
+                0 0 6px rgba(255, 0, 0, 0.8),
+                0 0 10px rgba(255, 0, 0, 0.65),
+                0 0 16px rgba(255, 0, 0, 0.55);
+            animation: smallNeonFlicker 3s infinite;
+        }
+
+        @keyframes smallNeonFlicker {
+            0%   { opacity: 0.5; }
+            25%  { opacity: 0.9; }
+            40%  { opacity: 0.6; }
+            55%  { opacity: 1; }
+            70%  { opacity: 0.7; }
+            100% { opacity: 0.95; }
+        }
+
+        footer {
+            position: absolute;
+            bottom: 20px;
+            width: 100%;
+            text-align: center;
+            color: #ccc;
+            font-size: 15px;
+            z-index: 20;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="bg"></div>
+<div class="overlay"></div>
+
+<div class="brakelight"></div>
+<div class="brakelight brakelight-right"></div>
+
+<div class="hazardlight hazard-left"></div>
+<div class="hazardlight hazard-right"></div>
+
+<div class="spark-layer"></div>
+
+<header class="logo-header">
+  <a href="/" class="logo-link">
+    <img src="img/logo.webp" alt="Majestic" class="logo-img">
+  </a>
+</header>
+
+<div class="container">
+
+    <div class="title">NEW YORK • EVENTS</div>
+
+    <div class="panels">
+
+        <!-- Deadly Route карточка -->
+        <a href="/deadly-ride/" class="panel panel-deadly panel-link">
+            <img src="img/deadlyride.png" alt="Deadly Route">
+            <div class="panel-title">DEADLY ROUTE</div>
+        </a>
+
+        <a href="/zavod/" class="panel panel-zavod panel-link">
+            <img src="img/zavod-preview.webp" alt="">
+            <div class="panel-title">ОСВОБОЖДЕНИЕ ЗАВОДА</div>
+        </a>
+
+        <a href="/chaos/" class="panel panel-chaos panel-link">
+            <img src="img/chaos-preview.webp" alt="">
+            <div class="panel-title">ВРЕМЯ ХАОСА</div>
+        </a>
+
+        <div class="panel panel-soon">
+            <div class="panel-title">COMING SOON</div>
+        </div>
+    </div>
+
+</div>
+
+<footer>
+    © New York • Events Hub <span class="footer-anti">ANTI</span>
+</footer>
+
+<script>
+function createSpark() {
+    const spark = document.createElement('div');
+    spark.classList.add('spark');
+
+    const top = Math.random() * 100;
+    const left = Math.random() * 100;
+
+    const sx = (Math.random() * 200 - 100) + "px";
+    const sy = (Math.random() * 300 + 120) + "px";
+
+    const duration = (Math.random() * 2 + 2).toFixed(2) + "s";
+
+    spark.style.top = top + "%";
+    spark.style.left = left + "%";
+    spark.style.setProperty('--sx', sx);
+    spark.style.setProperty('--sy', sy);
+    spark.style.animationDuration = duration;
+
+    document.querySelector('.spark-layer').appendChild(spark);
+
+    setTimeout(() => spark.remove(), parseFloat(duration) * 1000);
+}
+setInterval(createSpark, 180);
+
+window.addEventListener('load', () => {
+    const deadly = document.querySelector('.panel-deadly');
+    const zavod  = document.querySelector('.panel-zavod');
+    const chaos  = document.querySelector('.panel-chaos');
+    const soons  = document.querySelectorAll('.panel-soon');
+
+    if (deadly) {
+        setTimeout(() => deadly.classList.add('visible'), 120);
+    }
+    if (zavod) {
+        setTimeout(() => zavod.classList.add('visible'), 260);
+    }
+    if (chaos) {
+        setTimeout(() => chaos.classList.add('visible'), 420);
+    }
+
+    soons.forEach((panel, index) => {
+        const extraDelay = Math.random() * 180;
+        setTimeout(() => {
+            panel.classList.add('visible');
+        }, 700 + index * 170 + extraDelay);
+    });
+});
+
+document.querySelectorAll('.panel-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const href = link.getAttribute('href');
+        document.body.classList.add('page-exit');
+        setTimeout(() => {
+            window.location.href = href;
+        }, 420);
+    });
+});
+</script>
+
+</body>
+</html>

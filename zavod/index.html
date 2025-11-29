@@ -1,0 +1,1414 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Освобождение завода — Majestic RP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #05070a;
+      --bg-alt: #0b1118;
+      --accent-red: #ff2b2b;
+      --accent-orange: #ff7b00;
+      --accent-soft: #00ffc3;
+      --text-main: #f5f5f5;
+      --text-muted: #a7b0c4;
+      --border-soft: rgba(255,255,255,0.06);
+    }
+
+    html {
+      scroll-behavior: auto; 
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Roboto', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: radial-gradient(circle at top, #1b2636 0, #05070a 55%, #000 100%);
+      color: var(--text-main);
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+
+      opacity: 0;
+      transform: translateY(10px);
+      animation: pageEnter 0.7s ease-out forwards;
+    }
+    @keyframes pageEnter {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      mix-blend-mode: soft-light;
+      z-index: -1;
+    }
+    body::before {
+      background-image: repeating-linear-gradient(
+        0deg,
+        rgba(255,255,255,0.04) 0,
+        rgba(255,255,255,0.04) 1px,
+        transparent 1px,
+        transparent 3px
+      );
+      opacity: .16;
+    }
+    body::after {
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.35'/%3E%3C/svg%3E");
+      opacity: .22;
+    }
+
+    .wrap {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 16px 80px;
+    }
+
+    .logo-header {
+      position: fixed;
+      top: 24px;
+      left: 40px;
+      z-index: 20;
+    }
+
+    .logo-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+    }
+
+    .logo-img {
+      height: 40px;
+      width: auto;
+      filter: drop-shadow(0 0 6px rgba(255,255,255,0.55));
+      animation: logoGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes logoGlow {
+      0%   { filter: drop-shadow(0 0 4px rgba(255,255,255,0.35)); }
+      50%  { filter: drop-shadow(0 0 10px rgba(255,255,255,0.9)); }
+      100% { filter: drop-shadow(0 0 4px rgba(255,255,255,0.35)); }
+    }
+
+
+    .spark-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 5;
+    }
+
+    .spark {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: rgba(255,140,40,0.85);
+      box-shadow: 0 0 8px rgba(255,140,40,0.9);
+      filter: blur(0.4px);
+      animation: sparkFly linear infinite;
+      opacity: 0.75;
+    }
+
+    @keyframes sparkFly {
+      0%   { transform: translate(0,0) scale(1); opacity: 0; }
+      15%  { opacity: 1; }
+      100% { transform: translate(var(--sx), var(--sy)) scale(0.3); opacity: 0; }
+    }
+
+
+    .hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 80px 0 40px;
+      overflow: hidden;
+    }
+    
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 15% 0%, rgba(255,123,0,0.4) 0, transparent 45%),
+        radial-gradient(circle at 80% 0%, rgba(0,255,200,0.25) 0, transparent 55%),
+        url("../img/event-poster.jpg") center/cover no-repeat;
+      filter: grayscale(.2) contrast(1.1) brightness(.45);
+      z-index: -3;
+    }
+
+    .hero-overlay {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(0,0,0,0) 0, rgba(0,0,0,.9) 60%, #000 100%);
+      z-index: -2;
+    }
+
+    .hero-fire {
+      position: absolute;
+      inset: auto 0 -14vh;
+      height: 30vh;
+      background:
+        radial-gradient(circle at 10% 80%, rgba(255,255,255,0.2) 0, transparent 40%),
+        radial-gradient(circle at 40% 100%, rgba(255,123,0,0.9) 0, transparent 45%),
+        radial-gradient(circle at 80% 90%, rgba(255,40,40,0.9) 0, transparent 45%);
+      filter: blur(14px);
+      opacity: .24;
+      animation: firePulse 3s infinite alternate;
+      z-index: -1;
+      mix-blend-mode: screen;
+    }
+
+    @keyframes firePulse {
+      0% { transform: translateY(0); opacity: .16; }
+      100% { transform: translateY(-14px) scale(1.05); opacity: .3; }
+    }
+
+    .hero-inner {
+      position: relative;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.6);
+      border: 1px solid rgba(255,255,255,0.18);
+      margin-bottom: 18px;
+      backdrop-filter: blur(12px);
+    }
+    .badge-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--accent-soft);
+      box-shadow: 0 0 12px var(--accent-soft);
+    }
+
+    .hero-title {
+      font-family: 'Russo One', system-ui;
+      font-size: clamp(34px, 5vw, 54px);
+      font-weight: 900;
+      position: relative;
+      display: inline-block;
+      padding: 16px 42px;
+      border-radius: 1600px;
+      background: rgba(10,12,16,0.82);
+      border: 1px solid rgba(255,140,80,0.22);
+      color: #fff7f0;
+      text-shadow:
+        0 0 10px rgba(255,150,90,0.55),
+        0 0 22px rgba(255,100,50,0.45);
+      box-shadow:
+        0 0 26px rgba(255,70,40,0.32),
+        0 0 50px rgba(255,50,10,0.25);
+      overflow: hidden;
+    }
+
+    .hero-title::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      box-shadow:
+        0 0 20px rgba(255,100,50,0.28) inset,
+        0 0 40px rgba(255,60,20,0.25);
+      animation: borderPulse 3.5s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    .hero-title::after {
+      content: "";
+      position: absolute;
+      inset: -45%;
+      border-radius: inherit;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255,255,255,0.8) 45%,
+        rgba(255,210,170,0.75) 55%,
+        transparent 100%
+      );
+      mix-blend-mode: screen;
+      opacity: 0;
+      transform: translateX(-90%);
+      animation: titleShine 7s ease-in-out infinite;
+      pointer-events: none;
+    }
+
+    @keyframes borderPulse {
+      0% {
+        box-shadow:
+          0 0 16px rgba(255,100,50,0.25) inset,
+          0 0 30px rgba(255,60,20,0.2);
+      }
+      50% {
+        box-shadow:
+          0 0 30px rgba(255,120,60,0.55) inset,
+          0 0 70px rgba(255,80,40,0.4);
+      }
+      100% {
+        box-shadow:
+          0 0 16px rgba(255,100,50,0.25) inset,
+          0 0 30px rgba(255,60,20,0.2);
+      }
+    }
+
+    @keyframes titleShine {
+      0%, 80% { opacity: 0; transform: translateX(-90%); }
+      88%     { opacity: 1; transform: translateX(60%); }
+      100%    { opacity: 0; transform: translateX(140%); }
+    }
+
+    .hero-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 25px;
+      text-transform: none;
+      letter-spacing: .08em;
+      margin-top: 18px;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 26px;
+      font-size: 12px;
+    }
+
+    .meta-pill {
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.75);
+      border: 1px solid rgba(255,255,255,0.18);
+      backdrop-filter: blur(10px);
+    }
+    .meta-pill strong {
+      color: var(--accent-orange);
+      font-weight: 600;
+    }
+
+    .hero-actions {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      position: relative;
+      padding: 12px 24px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.5);
+      background: linear-gradient(135deg, var(--accent-red), #8b0000);
+      color: #fff;
+      font-size: 13px;
+      text-decoration: none;
+      text-transform: uppercase;
+      font-weight: 600;
+      letter-spacing: .16em;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform .15s ease-out, box-shadow .15s ease-out;
+      box-shadow: 0 0 0 rgba(0,0,0,0.6);
+    }
+    .btn::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background: conic-gradient(from 130deg,
+        rgba(255,255,255,0.25),
+        transparent,
+        transparent,
+        rgba(255,255,255,0.2),
+        transparent);
+      opacity: .3;
+      animation: spinGlow 4s linear infinite;
+    }
+    .btn span { position: relative; z-index: 1; }
+    @keyframes spinGlow { to { transform: rotate(360deg); } }
+    .btn:hover {
+      transform: translateY(-1px) scale(1.02);
+      box-shadow: 0 0 24px rgba(255,40,40,0.6);
+    }
+
+    .btn-ghost {
+      background: rgba(0,0,0,0.72);
+      border-color: rgba(255,255,255,0.25);
+      box-shadow: 0 0 0 rgba(0,0,0,0.5);
+    }
+    .btn-ghost::before { display: none; }
+    .btn-ghost:hover {
+      border-color: var(--accent-soft);
+      box-shadow: 0 0 18px rgba(0,255,195,0.5);
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .2em;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      opacity: .6;
+    }
+    .scroll-indicator .chevron {
+      width: 10px;
+      height: 16px;
+      border-left: 1px solid rgba(255,255,255,0.7);
+      border-bottom: 1px solid rgba(255,255,255,0.7);
+      transform: rotate(-45deg);
+      animation: chevronPulse 1.4s infinite;
+    }
+    @keyframes chevronPulse {
+      0% { transform: translateY(0) rotate(-45deg); opacity: .3; }
+      50% { transform: translateY(4px) rotate(-45deg); opacity: .8; }
+      100% { transform: translateY(0) rotate(-45deg); opacity: .3; }
+    }
+
+    /* ───────── БЛОКИ ───────── */
+
+    section { margin-top: 72px; }
+
+    .block {
+      border-radius: 16px;
+      border: 1px solid var(--border-soft);
+      background: radial-gradient(circle at top left, rgba(255,123,0,0.16) 0, rgba(21,29,39,0.96) 36%, rgba(3,5,9,0.98) 100%);
+      padding: 26px 22px 26px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .block-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .block-title {
+      font-family: 'Russo One', system-ui;
+      font-size: 18px;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .block-title::before {
+      content: "";
+      width: 22px;
+      height: 2px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent-red), transparent);
+      box-shadow: 0 0 10px rgba(255,40,40,0.8);
+    }
+
+    .block-tag {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.5);
+      border: 1px solid rgba(255,255,255,0.18);
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      color: var(--text-muted);
+    }
+
+    .block p {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text-main);
+    }
+    .block p + p { margin-top: 10px; }
+
+    @keyframes rulesWhiteGlow {
+      0% {
+        box-shadow:
+          0 0 14px rgba(255,120,40,0.10),
+          0 0 26px rgba(255,80,20,0.06);
+      }
+      50% {
+        box-shadow:
+          0 0 20px rgba(255,120,40,0.22),
+          0 0 38px rgba(255,80,20,0.14);
+      }
+      100% {
+        box-shadow:
+          0 0 14px rgba(255,120,40,0.10),
+          0 0 26px rgba(255,80,20,0.06);
+      }
+    }
+
+    #rules .block {
+      animation: rulesWhiteGlow 3.8s ease-in-out infinite;
+    }
+
+    .highlight {
+      color: var(--accent-orange);
+      font-weight: 600;
+    }
+
+    /* карта + фракции */
+    .map-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+      gap: 22px;
+      align-items: center;
+    }
+
+    .map-card {
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(0,0,0,0.9);
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.06),
+        0 20px 40px rgba(0,0,0,0.7);
+      background: #04070b;
+      transition: box-shadow .35s ease-out, transform .35s ease-out;
+    }
+
+    .map-card img {
+      width: 100%;
+      display: block;
+      filter: saturate(1.1) contrast(1.15);
+      transform-origin: center;
+      transition: transform .3s ease-out;
+    }
+
+    .map-card:hover {
+      box-shadow:
+        0 0 32px rgba(255, 0, 0, 0.18),
+        0 0 32px rgba(255, 94, 0, 0.12);
+      transform: scale(1.010);
+    }
+
+    .map-card:hover img { transform: scale(1.04); }
+
+    .map-label {
+      position: absolute;
+      left: 16px;
+      top: 14px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      background: rgba(0,0,0,0.8);
+      color: var(--accent-soft);
+      border: 1px solid rgba(0,255,195,0.7);
+      box-shadow: 0 0 12px rgba(0,255,195,0.5);
+    }
+
+    .map-danger {
+      position: absolute;
+      right: 14px;
+      bottom: 14px;
+      padding: 8px 14px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: radial-gradient(circle at top, rgba(255,40,40,0.9) 0, rgba(0,0,0,0.9) 55%);
+      border: 1px solid rgba(255,40,40,0.8);
+      box-shadow:
+        0 0 20px rgba(255,40,40,0.7),
+        0 0 40px rgba(255,20,20,0.5);
+      text-transform: uppercase;
+      font-size: 11px;
+      letter-spacing: .14em;
+    }
+
+    .map-danger-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      border: 2px solid rgba(0,0,0,0.8);
+      background: #ff0000;
+      box-shadow: 0 0 16px rgba(255,0,0,1);
+      animation: pulseDanger 1.1s infinite;
+    }
+    @keyframes pulseDanger {
+      0% { transform: scale(1); opacity: 1; }
+      70% { transform: scale(1.35); opacity: .15; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .map-note {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 10px;
+    }
+
+    .factions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+      margin-top: 8px;
+    }
+    .faction {
+      padding: 14px 12px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.75);
+      border: 1px solid rgba(255,255,255,0.18);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      text-align: center;
+    }
+
+    .factions-body {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition:
+        max-height 0.45s ease,
+        opacity 0.35s ease;
+    }
+
+    .factions-body.open {
+      max-height: 500px;
+      opacity: 1;
+    }
+
+    .faction-name { font-weight: 600; }
+    .faction-name.mara { color: #50c7ff; }
+    .faction-name.vagos { color: #ffd54a; }
+    .faction-name.ballas { color: #d26eff; }
+    .faction-name.fam { color: #6fff7e; }
+    .faction-name.bloods { color: #ff5252; }
+
+    .faction-name {
+      text-shadow:
+        0 0 2px currentColor,
+        0 0 4px currentColor;
+      animation: factionGlowPulse 2.4s ease-in-out infinite;
+    }
+
+    @keyframes factionGlowPulse {
+      0% {
+        text-shadow:
+          0 0 2px currentColor,
+          0 0 4px currentColor;
+      }
+      50% {
+        text-shadow:
+          0 0 4px currentColor,
+          0 0 8px currentColor;
+      }
+      100% {
+        text-shadow:
+          0 0 2px currentColor,
+          0 0 4px currentColor;
+      }
+    }
+
+    .factions-header {
+      display: flex;
+      align-items: flex-end;
+      gap: 12px;
+      flex-wrap: wrap;
+      padding-bottom: 2px;
+    }
+
+    .factions-toggle {
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(0,255,195,0.6);
+      background: rgba(0,0,0,0.7);
+      color: #c9ffe9;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      cursor: pointer;
+      outline: none;
+      white-space: nowrap;
+      box-shadow: 0 0 12px rgba(0,255,195,0.4);
+      transition: background .15s ease-out, box-shadow .15s ease-out, transform .1s ease-out;
+    }
+
+    .factions-toggle:hover {
+      background: rgba(0,255,195,0.12);
+      box-shadow: 0 0 18px rgba(0,255,195,0.7);
+      transform: translateY(-1px);
+    }
+
+    .timeline {
+      margin-top: 12px;
+      border-left: 2px solid rgba(255,255,255,0.12);
+      padding-left: 16px;
+    }
+    .timeline-step {
+      position: relative;
+      padding: 10px 0;
+    }
+    .timeline-step::before {
+      content: "";
+      position: absolute;
+      left: -21px;
+      top: 12px;
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--accent-orange);
+      box-shadow: 0 0 10px rgba(255,123,0,0.9);
+    }
+    .timeline-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      color: var(--text-muted);
+      margin-bottom: 3px;
+    }
+    .timeline p {
+      font-size: 14px;
+      color: var(--text-main);
+    }
+
+    .rules-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 22px;
+    }
+
+    .rules-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .rules-list li {
+      position: relative;
+      padding: 4px 10px 4px 20px;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--text-main);
+    }
+
+    .rules-list li + li {
+      margin-top: 6px;
+    }
+
+    .rules-list strong {
+      color: var(--accent-red);
+      font-weight: 600;
+    }
+
+    .rules-list li:before {
+      display: none !important;
+    }
+
+    .rules-hint {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 12px;
+      margin-left: 60px;
+    }
+
+    .rules-callout {
+      border-radius: 14px;
+      padding: 14px 14px 14px 16px;
+      background: radial-gradient(circle at 0 0, rgba(0,255,195,0.18) 0, rgba(6,10,14,1) 50%);
+      border: 1px solid rgba(0,255,195,0.6);
+      font-size: 15px;
+      line-height: 1.6;
+      box-shadow: 0 0 20px rgba(0,255,195,0.36);
+    }
+
+    .rules-callout-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      margin-bottom: 6px;
+      color: var(--accent-soft);
+    }
+
+    .rewards-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 22px;
+      align-items: stretch;
+    }
+
+    .reward-main,
+    .reward-secondary {
+      position: relative;
+      border-radius: 16px;
+      padding: 2px;
+      overflow: hidden;
+    }
+
+    .reward-main-inner,
+    .reward-secondary-inner {
+      height: 100%;
+      border-radius: inherit;
+      padding: 22px 30px 20px;
+      display: flex;
+      flex-direction: column;
+      font-size: calc(15px + 0.2vw);
+      line-height: 1.55;
+    }
+
+    .reward-main-inner {
+      background: radial-gradient(circle at 0 0, rgba(255,123,0,0.22), rgba(4,5,8,0.96));
+      border: 1px solid rgba(255,123,0,0.75);
+      box-shadow:
+        0 0 16px rgba(255,90,0,0.45),
+        0 0 28px rgba(255,70,0,0.28);
+    }
+    .reward-main-inner strong {
+      color: var(--accent-orange);
+    }
+
+    .reward-secondary-inner {
+      background: radial-gradient(circle at 100% 0%, rgba(255,0,55,0.18), rgba(4,5,8,0.96));
+      border: 1px solid rgba(161,2,68,0.58);
+      box-shadow:
+        0 0 16px rgba(255,0,43,0.45),
+        0 0 28px rgba(255,0,45,0.28);
+    }
+    .reward-secondary-inner strong {
+      color: var(--accent-orange);
+    }
+
+    @keyframes rewardMainGlow {
+      0% {
+        box-shadow:
+          0 0 18px rgba(255,120,40,0.18),
+          0 0 32px rgba(255,80,20,0.10);
+      }
+      50% {
+        box-shadow:
+          0 0 28px rgba(255,140,60,0.33),
+          0 0 48px rgba(255,90,25,0.20);
+      }
+      100% {
+        box-shadow:
+          0 0 18px rgba(255,120,40,0.18),
+          0 0 32px rgba(255,80,20,0.10);
+      }
+    }
+
+    @keyframes rewardSecondaryGlow {
+      0% {
+        box-shadow:
+          0 0 18px rgba(255,0,80,0.20),
+          0 0 32px rgba(255,0,40,0.10);
+      }
+      50% {
+        box-shadow:
+          0 0 28px rgba(255,40,120,0.35),
+          0 0 52px rgba(255,0,70,0.22);
+      }
+      100% {
+        box-shadow:
+          0 0 18px rgba(255,0,80,0.20),
+          0 0 32px rgba(255,0,40,0.10);
+      }
+    }
+
+    .reward-main {
+      animation: rewardMainGlow 4.8s ease-in-out infinite;
+    }
+    .reward-secondary {
+      animation: rewardSecondaryGlow 5.2s ease-in-out infinite;
+    }
+
+    .reward-list li {
+      position: relative;
+      margin-bottom: 14px;
+      padding-left: 28px;
+      line-height: 1.3;
+      display: flex;
+      align-items: center;
+    }
+
+    .reward-list li::before {
+      content: "";
+      position: absolute;
+      left: 8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.85);
+      box-shadow: 0 0 8px rgba(255,255,255,0.9);
+    }
+
+    .reward-list li strong {
+      font-size: 1.05em;
+    }
+
+    .footer {
+      margin-top: 70px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: .16em;
+    }
+
+    /* REVEAL */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity .6s ease-out, transform .6s ease-out;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .section-highlight {
+      animation: sectionGlow 1.2s ease-out;
+    }
+    @keyframes sectionGlow {
+      0%   { box-shadow: 0 0 0 rgba(255,90,40,0); }
+      40%  { box-shadow: 0 0 40px rgba(255,90,40,0.55); }
+      100% { box-shadow: 0 0 0 rgba(255,90,40,0); }
+    }
+
+    @media (max-width: 900px) {
+      .map-grid, .rules-grid, .rewards-grid { grid-template-columns: 1fr; }
+      .block { padding: 22px 18px 22px; }
+    }
+    @media (max-width: 600px) {
+      .hero { padding-top: 72px; }
+      .hero-subtitle { font-size: 12px; }
+      .hero-meta { gap: 8px; }
+    }
+
+    .faction-tag,
+    .faction-tag.green {
+      display: none !important;
+    }
+
+    .reward-glow {
+      position: relative;
+      overflow: visible;
+      border-color: rgba(255,180,70,0.45) !important;
+      box-shadow:
+        0 0 6px rgba(255,160,60,0.25),
+        0 0 12px rgba(255,140,40,0.18),
+        inset 0 0 25px rgba(255,170,60,0.22);
+      animation: rewardPulse 4s ease-in-out infinite;
+    }
+
+    @keyframes rewardPulse {
+      0% {
+        box-shadow:
+          0 0 14px rgba(255,160,60,0.18),
+          0 0 34px rgba(255,140,40,0.14),
+          inset 0 0 16px rgba(255,170,60,0.16);
+      }
+      50% {
+        box-shadow:
+          0 0 26px rgba(255,190,80,0.45),
+          0 0 55px rgba(255,150,50,0.28),
+          inset 0 0 32px rgba(255,180,70,0.26);
+      }
+      100% {
+        box-shadow:
+          0 0 14px rgba(255,160,60,0.18),
+          0 0 34px rgba(255,140,40,0.14),
+          inset 0 0 16px rgba(255,170,60,0.16);
+      }
+    }
+
+    .reward-glow .reward-spark {
+      position: absolute;
+      width: 3px;
+      height: 3px;
+      border-radius: 50%;
+      background: rgba(255,180,60,0.9);
+      box-shadow: 0 0 8px rgba(255,180,60,1);
+      pointer-events: none;
+      animation: rewardSparkFly linear infinite;
+    }
+
+    @keyframes rewardSparkFly {
+      0%   { transform: translate(0,0) scale(1); opacity: 0; }
+      10%  { opacity: 1; }
+      100% { transform: translate(var(--sx), var(--sy)) scale(0.2); opacity: 0; }
+    }
+
+    /* ───────── КНОПКА ВВЕРХ ───────── */
+
+    .scroll-top {
+      position: fixed;
+      right: 26px;
+      bottom: 26px;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.5);
+      background: radial-gradient(circle at 30% 0%, rgba(255,200,150,0.4) 0, #05070a 45%, #000 100%);
+      color: #fff;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .25s ease-out, transform .25s ease-out, box-shadow .25s ease-out;
+      z-index: 30;
+      box-shadow: 0 0 0 rgba(0,0,0,0.6);
+    }
+
+    .scroll-top.visible {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .scroll-top:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        0 0 14px rgba(255,180,80,0.8),
+        0 0 26px rgba(255,120,40,0.6);
+    }
+
+  </style>
+</head>
+<body>
+<div class="page-glow"></div>
+
+<header class="logo-header">
+  <a href="index.html" class="logo-link">
+    <img src="img/logo.webp" alt="Majestic Events" class="logo-img">
+  </a>
+</header>
+
+<div class="spark-layer" id="sparks"></div>
+
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-fire"></div>
+
+  <div class="wrap hero-inner">
+    <div class="badge">
+      <span class="badge-dot"></span>
+      <span>Специальное мероприятие для гетто • Majestic RP • NEW YORK • By ANTI</span>
+    </div>
+
+    <h1 class="hero-title">
+      ОСВОБОЖДЕНИЕ ЗАВОДА
+    </h1>
+
+    <div class="hero-subtitle">
+      Хаотичный рейд на заброшенный промышленный комплекс. Только одна банда заберёт ресурсы живой.
+    </div>
+
+    <div class="hero-meta">
+      <div class="meta-pill"><strong>Дата:</strong> 22.11.2025</div>
+      <div class="meta-pill"><strong>Время:</strong> 20:00 (сбор с 19:40)</div>
+      <div class="meta-pill"><strong>Сервер:</strong> New York</div>
+      <div class="meta-pill"><strong>Формат:</strong> фракционное мероприятие</div>
+    </div>
+
+    <div class="hero-actions">
+      <a href="#story" class="btn"><span>предыстория</span></a>
+      <a href="#rules" class="btn btn-ghost"><span>Правила и награды</span></a>
+    </div>
+  </div>
+
+  <div class="scroll-indicator">
+    <div>листай вниз</div>
+    <div class="chevron"></div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <section id="story" class="reveal">
+    <div class="block">
+      <div class="block-header">
+        <div class="block-title">Предыстория</div>
+        <div class="block-tag">боевой сюжет</div>
+      </div>
+      <p>
+        На окраине города, среди заброшенных промышленных кварталов, стоит старый завод — мрачный монолит из стали и бетона.
+        Долгое время он казался никому не нужным… пока не появилась информация, что внутри спрятаны редкие и крайне ценные
+        материалы, жизненно необходимые для развития вашей фракции.
+      </p>
+      <p>
+        Однако вы быстро понимаете: вы не единственные, кто узнал о находке. На территории завода уже были замечены десятки
+        вооружённых людей — наёмники, охраняющие груз по заказу неизвестных. Ходят слухи, что и другие банды собираются нанести
+        удар, чтобы первыми завладеть ресурсами.
+      </p>
+      <p>
+        <span class="highlight">Ваша единственная цель:</span> проникнуть на территорию, нейтрализовать всех противников,
+        захватить контроль над заводом и обеспечить доступ к материалам.
+      </p>
+    </div>
+  </section>
+
+  <section id="map" class="reveal">
+    <div class="block" style="margin-top:32px;">
+      <div class="block-header">
+        <div class="block-title">Карта проведения</div>
+        <div class="block-tag">нейтральные спавны и красная зона</div>
+      </div>
+
+      <div class="map-grid">
+        <div class="map-card">
+          <img src="../img/factory-map.webp" alt="Карта проведения мероприятия">
+          <div class="map-label">зона операции</div>
+          <div class="map-danger">
+            <span class="map-danger-dot"></span>
+            <span>красная зона: завод</span>
+          </div>
+        </div>
+        <div>
+          <p>
+            На карте отмечены нейтральные зоны спавна фракций и <span class="highlight">красный периметр завода</span>,
+            где будет происходить основная перестрелка. Расположение конкретного спавна ваша фракция узнает уже после телепорта.
+          </p>
+          <p class="map-note">
+            Любая попытка злоупотребить нейтральными зонами будет пресекаться администрацией.
+          </p>
+
+          <div class="factions-wrapper" style="margin-top:18px;">
+            <div class="factions-header">
+              <div class="block-title" style="font-size:13px; letter-spacing:.14em; margin-bottom:6px;">
+                Принимают участие:
+              </div>
+              <button type="button" class="factions-toggle" id="toggle-factions">
+                Показать список
+              </button>
+            </div>
+
+            <div class="factions-body" id="factions-body">
+              <div class="factions">
+                <div class="faction">
+                  <span class="faction-name mara">Marabunta Grande</span>
+                </div>
+                <div class="faction">
+                  <span class="faction-name vagos">Los Santos Vagos</span>
+                </div>
+                <div class="faction">
+                  <span class="faction-name ballas">The Ballas Gang</span>
+                </div>
+                <div class="faction">
+                  <span class="faction-name fam">The Families</span>
+                </div>
+                <div class="faction">
+                  <span class="faction-name bloods">The Bloods</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="flow" class="reveal">
+    <div class="block" style="margin-top:32px;">
+      <div class="block-header">
+        <div class="block-title">Суть проведения мероприятия</div>
+        <div class="block-tag">общий регламент</div>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-step">
+          <div class="timeline-label">19:40 — запуск телепорта</div>
+          <p>
+            Телепорт для фракций открывается в <span class="highlight">19:40</span>. Об этом участники узнают во фракционном чате.
+            Игроки обязаны быть готовы минимум за 5 минут до запуска телепорта.
+          </p>
+        </div>
+        <div class="timeline-step">
+          <div class="timeline-label">ожидание сигнала</div>
+          <p>
+            После телепорта все фракции занимают свои нейтральные спавны и ждут глобального оповещения о старте мероприятия.
+            Покидать точку спавна до объявления о начале — запрещено.
+          </p>
+        </div>
+        <div class="timeline-step">
+          <div class="timeline-label">штурм периметра</div>
+          <p>
+            Каждой фракции выдаётся <span class="highlight">мотовозка</span>, чтобы пробить забор и войти в красную зону.
+            Как только мотовозка оказывается внутри периметра, транспорт удаляется.
+          </p>
+        </div>
+        <div class="timeline-step">
+          <div class="timeline-label">5 минут на вход</div>
+          <p>
+            После объявления старта у банд есть <span class="highlight">5 минут</span>, чтобы зайти в красную зону.
+            Игроки, которые не успеют войти в периметр до истечения времени, будут исключены.
+          </p>
+        </div>
+        <div class="timeline-step">
+          <div class="timeline-label">полный хаос</div>
+          <p>
+            Внутри периметра действует правило: <span class="highlight">вижу — стреляю</span>.
+            Задача фракции — выбить всех конкурентов и удержать зону до последнего живого.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="rules" class="reveal">
+    <div class="block" style="margin-top:32px;">
+      <div class="block-header">
+        <div class="block-title">Правила мероприятия</div>
+        <div class="block-tag">запретки</div>
+      </div>
+
+      <div class="rules-grid">
+        <div>
+          <p style="margin-bottom:8px;">
+            На мероприятии действуют все основные правила проекта, кроме отдельных моментов, связанных с боевым режимом.
+          </p>
+
+          <ul class="rules-list">
+            <li><strong>1.1</strong> Все участники обязаны быть одеты в цвет своей фракции (верх и низ) — нарушение = <strong>Kick с мероприятия.</strong></li>
+            <li><strong>1.2</strong> Запрещено использование предметов из запрещённой таблицы и любых дронов — <strong>Kick с мероприятия.</strong></li>
+            <li><strong>1.3</strong> Запрещено нарушать правила зон проведения мероприятий — <strong>Kick.</strong></li>
+            <li><strong>1.4</strong> На мероприятии действуют все правила проекта. 
+              Исключения: PG, DM, MG, NonRP Drive.</li>
+            <li><strong>1.5</strong> Запрещены любые анимации, кроме функциональных (присесть, ползти). Использование Q для стрельбы из укрытия приравнивается к анимациям — <strong>Kick.</strong></li>
+            <li><strong>1.6</strong> Запрещены криминальные и унизительные действия в сторону игроков других фракций. — <strong>Kick.</strong></li>
+            <li><strong>1.7</strong> Запрещены союзы между фракциями и избегание перестрелок при столкновении — <strong>Kick всех участников фракции.</strong></li>
+            <li><strong>1.8</strong> Запрещено поднимать предметы/оружие во время активной перестрелки — <strong>Kick.</strong></li>
+            <li><strong>1.9</strong> Запрещены тяжёлые бронежилеты (100% и 150%). Разрешены только 50% — <strong>Kick.</strong></li>
+          </ul>
+        </div>
+
+        <div>
+          <ul class="rules-list">
+            <li><strong>2.0</strong> Запрещено намеренно удерживать одну локацию. Фракции должны быть в движении (кроме активной перестрелки).</li>
+            <li><strong>2.1</strong> Запрещено поджидать и стрелять из интерьера завода, занимать крыши и возвышенности. Вся стрельба — на открытой местности — <strong>Kick.</strong></li>
+            <li><strong>2.2</strong> Запрещено намеренно бездействовать и ждать, пока другие фракции перебьют друг друга — <strong>Kick.</strong></li>
+            <li><strong>2.3</strong> Запрещена стрельба из нейтральной зоны в красную и наоборот по игрокам, которые ещё не вошли в игровую зону — <strong>Kick.</strong></li>
+          </ul>
+
+          <div class="rules-hint">
+            Администрация оставляет за собой право кикать нарушителей.
+          </div>
+
+          <div class="rules-callout" style="margin-top:14px;">
+            <div class="rules-callout-title">важно</div>
+            <div>
+              Мероприятие создано для жёсткого, динамичного PvP без лишней токсичности. Уважайте соперников,
+              и играйте на результат своей фракции.
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="rewards" class="reveal">
+    <div class="block reward-glow" style="margin-top:32px;">
+      <div class="block-header">
+        <div class="block-title">Награды</div>
+        <div class="block-tag">Награды</div>
+      </div>
+
+      <div class="rewards-grid">
+        <div class="reward-main">
+          <div class="reward-main-inner">
+            <p style="margin-bottom:6px;">
+              <strong>Главный приз</strong> получает команда, которая успешно захватывает территорию завода
+              и остаётся последней в живых:
+            </p>
+
+            <ul class="rules-list reward-list">
+              <li><strong>80</strong>&nbsp;бронежилетов (50%)</li>
+              <li><strong>80</strong>&nbsp;тяжёлых винтовок</li>
+              <li><strong>80</strong>&nbsp;эпинефринов</li>
+            </ul>
+
+            <p style="margin-top:10px;">
+              Эти ресурсы должны серьёзно усилить фракцию.
+            </p>
+          </div>
+        </div>
+
+        <div class="reward-secondary">
+          <div class="reward-secondary-inner">
+            <p>
+              <strong>Бонус за участие:</strong> все фракции, которые выходят на мероприятие и отыгрывают его до конца,
+              получают набор поддержки:
+            </p>
+
+            <ul class="rules-list reward-list">
+              <li><strong>40</strong>&nbsp;бронежилетов (50%)</li>
+              <li><strong>40</strong>&nbsp;тяжёлых винтовок</li>
+              <li><strong>40</strong>&nbsp;эпинефринов</li>
+            </ul>
+
+            <p style="margin-top:10px;">
+              Даже если завод не удастся отбить, ваша банда не уходит с пустыми руками.
+            </p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <div class="footer">
+    NEW YORK • MAJESTIC RP • GHETTO • Все права защищены.
+  </div>
+</div>
+
+<button class="scroll-top" id="scrollTopBtn" aria-label="Наверх">↑</button>
+
+<script>
+
+  history.scrollRestoration = "manual";
+
+  window.addEventListener('load', () => {
+    if (!location.hash) {
+      window.scrollTo(0, 0);
+    }
+  });
+
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener("click", (e) => {
+      e.preventDefault();
+      const id = a.getAttribute("href").substring(1);
+      const target = document.getElementById(id);
+      if (target) {
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+        target.classList.add("section-highlight");
+        setTimeout(() => target.classList.remove("section-highlight"), 1200);
+      }
+    });
+  });
+
+  const reveals = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+  reveals.forEach(el => io.observe(el));
+
+  const heroBg = document.querySelector('.hero-bg');
+  const heroFire = document.querySelector('.hero-fire');
+  document.addEventListener('mousemove', (e) => {
+    const x = (e.clientX / window.innerWidth - 0.5);
+    const y = (e.clientY / window.innerHeight - 0.5);
+    if (heroBg)  heroBg.style.transform  = `translate(${x * 10}px, ${y * 8}px) scale(1.03)`;
+    if (heroFire) heroFire.style.transform = `translate(${x * -12}px, ${y * -10}px)`;
+  });
+
+  const sparkLayer = document.getElementById("sparks");
+  function generateSpark() {
+    const s = document.createElement("div");
+    s.className = "spark";
+    const startX = Math.random() * window.innerWidth;
+    const startY = Math.random() * window.innerHeight;
+    const driftX = (Math.random() * 300 + 200) * (Math.random() > 0.5 ? 1 : -1);
+    const driftY = Math.random() * 400 + 200;
+    s.style.left = startX + "px";
+    s.style.top  = startY + "px";
+    s.style.setProperty("--sx", driftX + "px");
+    s.style.setProperty("--sy", driftY + "px");
+    s.style.animationDuration = (2 + Math.random() * 2) + "s";
+    sparkLayer.appendChild(s);
+    setTimeout(() => s.remove(), 4000);
+  }
+  setInterval(generateSpark, 320);
+
+  const toggleBtn = document.getElementById("toggle-factions");
+  const factionsBody = document.getElementById("factions-body");
+
+  if (toggleBtn && factionsBody) {
+    toggleBtn.addEventListener("click", () => {
+      factionsBody.classList.toggle("open");
+
+      toggleBtn.textContent = factionsBody.classList.contains("open")
+        ? "Скрыть список"
+        : "Показать список";
+    });
+  }
+
+  const rewardBlock = document.querySelector(".reward-glow");
+
+  function createRewardSpark() {
+    if (!rewardBlock) return;
+
+    const s = document.createElement("div");
+    s.className = "reward-spark";
+
+    const rect = rewardBlock.getBoundingClientRect();
+    const x = Math.random() * rect.width;
+    const y = Math.random() * rect.height;
+
+    s.style.left = x + "px";
+    s.style.top  = y + "px";
+
+    const driftX = (Math.random() * 80 - 40);
+    const driftY = (Math.random() * 80 - 40);
+    s.style.setProperty("--sx", driftX + "px");
+    s.style.setProperty("--sy", driftY + "px");
+
+    s.style.animationDuration = (1.8 + Math.random()) + "s";
+
+    rewardBlock.appendChild(s);
+
+    setTimeout(() => s.remove(), 2500);
+  }
+
+  setInterval(createRewardSpark, 220);
+
+  const scrollBtn = document.getElementById('scrollTopBtn');
+
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 400) {
+      scrollBtn.classList.add('visible');
+    } else {
+      scrollBtn.classList.remove('visible');
+    }
+  });
+
+  scrollBtn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+</script>
+
+</body>
+</html>

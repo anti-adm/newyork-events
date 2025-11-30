@@ -20,7 +20,7 @@
     }
 
     html {
-      scroll-behavior: auto; 
+      scroll-behavior: auto;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -99,7 +99,6 @@
       100% { filter: drop-shadow(0 0 4px rgba(255,255,255,0.35)); }
     }
 
-
     .spark-layer {
       position: fixed;
       inset: 0;
@@ -126,7 +125,6 @@
       100% { transform: translate(var(--sx), var(--sy)) scale(0.3); opacity: 0; }
     }
 
-
     .hero {
       position: relative;
       min-height: 100vh;
@@ -136,14 +134,14 @@
       padding: 80px 0 40px;
       overflow: hidden;
     }
-    
+
     .hero-bg {
       position: absolute;
       inset: 0;
       background:
         radial-gradient(circle at 15% 0%, rgba(255,123,0,0.4) 0, transparent 45%),
         radial-gradient(circle at 80% 0%, rgba(0,255,200,0.25) 0, transparent 55%),
-        url("../img/event-poster.jpg") center/cover no-repeat;
+        url("../img/background.webp") center/cover no-repeat;
       filter: grayscale(.2) contrast(1.1) brightness(.45);
       z-index: -3;
     }
@@ -391,8 +389,6 @@
       100% { transform: translateY(0) rotate(-45deg); opacity: .3; }
     }
 
-    /* ───────── БЛОКИ ───────── */
-
     section { margin-top: 72px; }
 
     .block {
@@ -475,7 +471,6 @@
       font-weight: 600;
     }
 
-    /* карта + фракции */
     .map-grid {
       display: grid;
       grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
@@ -523,7 +518,7 @@
       letter-spacing: .18em;
       background: rgba(0,0,0,0.8);
       color: var(--accent-soft);
-      border: 1px solid rgba(0,255,195,0.7);
+      border: 1px солид rgba(0,255,195,0.7);
       box-shadow: 0 0 12px rgba(0,255,195,0.5);
     }
 
@@ -879,7 +874,6 @@
       letter-spacing: .16em;
     }
 
-    /* REVEAL */
     .reveal {
       opacity: 0;
       transform: translateY(24px);
@@ -963,8 +957,6 @@
       100% { transform: translate(var(--sx), var(--sy)) scale(0.2); opacity: 0; }
     }
 
-    /* ───────── КНОПКА ВВЕРХ ───────── */
-
     .scroll-top {
       position: fixed;
       right: 26px;
@@ -1006,8 +998,8 @@
 <div class="page-glow"></div>
 
 <header class="logo-header">
-  <a href="index.html" class="logo-link">
-    <img src="img/logo.webp" alt="Majestic Events" class="logo-img">
+  <a href="/" class="logo-link">
+    <img src="../img/logo.webp" alt="Majestic Events" class="logo-img">
   </a>
 </header>
 
@@ -1033,7 +1025,7 @@
     </div>
 
     <div class="hero-meta">
-      <div class="meta-pill"><strong>Дата:</strong> 22.11.2025</div>
+      <div class="meta-pill"><strong>Дата:</strong> 31.11.2025</div>
       <div class="meta-pill"><strong>Время:</strong> 20:00 (сбор с 19:40)</div>
       <div class="meta-pill"><strong>Сервер:</strong> New York</div>
       <div class="meta-pill"><strong>Формат:</strong> фракционное мероприятие</div>
@@ -1130,6 +1122,7 @@
                 </div>
               </div>
             </div>
+
           </div>
 
         </div>
@@ -1293,7 +1286,6 @@
 <button class="scroll-top" id="scrollTopBtn" aria-label="Наверх">↑</button>
 
 <script>
-
   history.scrollRestoration = "manual";
 
   window.addEventListener('load', () => {

@@ -1343,5 +1343,13 @@
     setInterval(spawnSpark, 3500);
     setInterval(spawnSpark, 5200);
   </script>
+  <script>
+  // Фикс поведения по кнопке "Назад"/"Вперёд"
+  window.addEventListener('pageshow', () => {
+    document.body.classList.remove('page-exit');
+    document.body.style.opacity = '1';
+    document.body.style.transform = 'none';
+  });
+</script>
 </body>
 </html>

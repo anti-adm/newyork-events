@@ -658,6 +658,13 @@ document.querySelectorAll('.panel-link').forEach(link => {
     });
 });
 </script>
-
+<script>
+  // Фикс "чёрного экрана" при возврате по Назад/Вперёд
+  window.addEventListener('pageshow', () => {
+    document.body.classList.remove('page-exit');
+    document.body.style.opacity = '1';
+    document.body.style.transform = 'none';
+  });
+</script>
 </body>
 </html>
